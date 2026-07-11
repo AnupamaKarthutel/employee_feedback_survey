@@ -16,13 +16,14 @@ class _CreateSurveyScreenState extends State<CreateSurveyScreen> {
   final _descriptionController = TextEditingController();
   final _createdByController = TextEditingController();
   final List<Question> _questions = [];
+  int _nextQuestionId = 1;
   bool _isSaving = false;
 
   void _addQuestion() {
     setState(() {
       _questions.add(
         Question(
-          id: 'q_${_questions.length + 1}',
+          id: 'q_${_nextQuestionId++}',
           text: '',
           type: QuestionType.text,
         ),
@@ -178,8 +179,10 @@ class _QuestionEditorState extends State<_QuestionEditor> {
   @override
   void didUpdateWidget(covariant _QuestionEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _textController.text = widget.question.text;
-    _optionsController.text = widget.question.options.join(', ');
+    if (widget.question.id != oldWidget.question.id) {
+      _textController.text = widget.question.text;
+      _optionsController.text = widget.question.options.join(', ');
+    }
   }
 
   void _update({
@@ -246,6 +249,9 @@ class _QuestionEditorState extends State<_QuestionEditor> {
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
+                  if (value == QuestionType.rating) {
+                    _optionsController.text = '';
+                  }
                   _update(
                     type: value,
                     options: value == QuestionType.rating ? [] : null,
