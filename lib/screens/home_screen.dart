@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../models/app_user.dart';
 import '../models/survey.dart';
+import '../services/auth_service_provider.dart';
 import '../services/service_provider.dart';
 import '../services/survey_service.dart';
 import 'create_survey_screen.dart';
@@ -8,7 +10,9 @@ import 'survey_responses_screen.dart';
 import 'take_survey_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.user});
+
+  final AppUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +22,13 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Employee Feedback'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sign out',
+            onPressed: () => AuthServiceProvider.of(context).signOut(),
+          ),
+        ],
       ),
       body: StreamBuilder<List<Survey>>(
         stream: service.getSurveys(),
@@ -30,8 +41,12 @@ class HomeScreen extends StatelessWidget {
           }
           final surveys = snapshot.data!;
           if (surveys.isEmpty) {
-            return const Center(
-              child: Text('No surveys yet. Create the first one!'),
+            return Center(
+              child: Text(
+                user.isAdmin
+                    ? 'No surveys yet. Create the first one!'
+                    : 'No surveys available yet.',
+              ),
             );
           }
           return ListView.builder(
@@ -40,20 +55,27 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final survey = surveys[index];
               return _SurveyCard(
+                user: user,
                 survey: survey,
-                onDelete: () => _deleteSurvey(context, service, survey),
+                onDelete: user.isAdmin
+                    ? () => _deleteSurvey(context, service, survey)
+                    : null,
               );
             },
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const CreateSurveyScreen()),
-        ),
-        icon: const Icon(Icons.add),
-        label: const Text('Survey'),
-      ),
+      floatingActionButton: user.isAdmin
+          ? FloatingActionButton.extended(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => CreateSurveyScreen(createdBy: user.email),
+                ),
+              ),
+              icon: const Icon(Icons.add),
+              label: const Text('Survey'),
+            )
+          : null,
     );
   }
 
@@ -86,10 +108,15 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _SurveyCard extends StatelessWidget {
-  const _SurveyCard({required this.survey, required this.onDelete});
+  const _SurveyCard({
+    required this.user,
+    required this.survey,
+    required this.onDelete,
+  });
 
+  final AppUser user;
   final Survey survey;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -119,26 +146,31 @@ class _SurveyCard extends StatelessWidget {
                 FilledButton.tonalIcon(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => TakeSurveyScreen(surveyId: survey.id),
+                      builder: (_) => TakeSurveyScreen(
+                        surveyId: survey.id,
+                        user: user,
+                      ),
                     ),
                   ),
                   icon: const Icon(Icons.play_arrow),
                   label: const Text('Take'),
                 ),
-                OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => SurveyResponsesScreen(surveyId: survey.id),
+                if (user.isAdmin) ...[
+                  OutlinedButton.icon(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => SurveyResponsesScreen(surveyId: survey.id),
+                      ),
                     ),
+                    icon: const Icon(Icons.bar_chart),
+                    label: const Text('Responses'),
                   ),
-                  icon: const Icon(Icons.bar_chart),
-                  label: const Text('Responses'),
-                ),
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline),
-                  tooltip: 'Delete',
-                ),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: const Icon(Icons.delete_outline),
+                    tooltip: 'Delete',
+                  ),
+                ],
               ],
             ),
           ],

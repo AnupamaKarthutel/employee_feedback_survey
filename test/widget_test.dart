@@ -8,16 +8,20 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:employee_feedback_survey/main.dart';
+import 'package:employee_feedback_survey/services/in_memory_auth_service.dart';
 import 'package:employee_feedback_survey/services/in_memory_survey_service.dart';
 
 void main() {
-  testWidgets('Home screen renders', (WidgetTester tester) async {
+  testWidgets('Login screen renders', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MyApp(service: InMemorySurveyService()),
+      MyApp(
+        surveyService: InMemorySurveyService(),
+        authService: InMemoryAuthService(),
+      ),
     );
 
-    expect(find.text('Employee Feedback'), findsOneWidget);
     await tester.pumpAndSettle();
-    expect(find.text('No surveys yet. Create the first one!'), findsOneWidget);
+    expect(find.text('Employee Feedback & Surveys'), findsOneWidget);
+    expect(find.text('Sign in'), findsOneWidget);
   });
 }

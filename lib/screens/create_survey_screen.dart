@@ -4,7 +4,9 @@ import '../models/survey.dart';
 import '../services/service_provider.dart';
 
 class CreateSurveyScreen extends StatefulWidget {
-  const CreateSurveyScreen({super.key});
+  const CreateSurveyScreen({super.key, this.createdBy});
+
+  final String? createdBy;
 
   @override
   State<CreateSurveyScreen> createState() => _CreateSurveyScreenState();
@@ -14,10 +16,16 @@ class _CreateSurveyScreenState extends State<CreateSurveyScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _createdByController = TextEditingController();
+  late final TextEditingController _createdByController;
   final List<Question> _questions = [];
   int _nextQuestionId = 1;
   bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _createdByController = TextEditingController(text: widget.createdBy ?? '');
+  }
 
   void _addQuestion() {
     setState(() {
@@ -71,6 +79,14 @@ class _CreateSurveyScreenState extends State<CreateSurveyScreen> {
         const SnackBar(content: Text('Survey saved')),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _createdByController.dispose();
+    super.dispose();
   }
 
   @override

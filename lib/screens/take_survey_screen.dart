@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import '../models/app_user.dart';
 import '../models/question.dart';
 import '../models/survey.dart';
 import '../models/survey_response.dart';
 import '../services/service_provider.dart';
 
 class TakeSurveyScreen extends StatefulWidget {
-  const TakeSurveyScreen({super.key, required this.surveyId});
+  const TakeSurveyScreen({
+    super.key,
+    required this.surveyId,
+    required this.user,
+  });
 
   final String surveyId;
+  final AppUser user;
 
   @override
   State<TakeSurveyScreen> createState() => _TakeSurveyScreenState();
@@ -18,6 +24,13 @@ class _TakeSurveyScreenState extends State<TakeSurveyScreen> {
   final _idController = TextEditingController();
   final _answers = <String, dynamic>{};
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.user.email;
+    _idController.text = widget.user.id;
+  }
 
   Future<void> _submit(Survey survey) async {
     if (_nameController.text.trim().isEmpty ||
