@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 class DefaultFirebaseOptions {
   const DefaultFirebaseOptions._();
 
   static FirebaseOptions get currentPlatform {
+    if (kIsWeb) return web;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
@@ -27,18 +28,13 @@ class DefaultFirebaseOptions {
     }
   }
 
-  /// Replace these placeholders with your Firebase web project settings.
-  ///
-  /// Get your config from the Firebase Console:
-  /// Project Settings > Your apps > Web app > Config
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'YOUR_WEB_API_KEY',
-    appId: 'YOUR_WEB_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+    apiKey: 'AIzaSyBxT19WPIUZZnNkzoyOJeSLABiBqAZcCWk',
+    appId: '1:316384747623:web:05390e46c4f17558cdf4c2',
+    messagingSenderId: '316384747623',
     projectId: 'employee-feedback-survey',
     authDomain: 'employee-feedback-survey.firebaseapp.com',
-    storageBucket: 'employee-feedback-survey.appspot.com',
-    measurementId: 'YOUR_MEASUREMENT_ID',
+    storageBucket: 'employee-feedback-survey.firebasestorage.app',
   );
 
   /// Replace these placeholders with your Firebase Android project settings.

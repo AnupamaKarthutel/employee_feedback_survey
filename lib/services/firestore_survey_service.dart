@@ -53,6 +53,17 @@ class FirestoreSurveyService implements SurveyService {
   }
 
   @override
+  Future<bool> hasSubmitted(String surveyId, String employeeId) async {
+    final snapshot = await _surveys
+        .doc(surveyId)
+        .collection('responses')
+        .where('employeeId', isEqualTo: employeeId)
+        .limit(1)
+        .get();
+    return snapshot.docs.isNotEmpty;
+  }
+
+  @override
   Stream<List<SurveyResponse>> getResponsesForSurvey(String surveyId) {
     return _surveys
         .doc(surveyId)

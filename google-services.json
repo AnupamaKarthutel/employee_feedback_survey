@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "316384747623",
+    "project_id": "employee-feedback-survey",
+    "storage_bucket": "employee-feedback-survey.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316384747623:android:9a9b5dc7d55299c6cdf4c2",
+        "android_client_info": {
+          "package_name": "com.example.employee_feedback_survey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316384747623-a733oeokvs7k8tp5ubmev1cheuf1kej4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZjICoGl_wPtoBHKiE6r9Q-O722ZMUfJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316384747623-a733oeokvs7k8tp5ubmev1cheuf1kej4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

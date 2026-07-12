@@ -54,10 +54,14 @@ class FirebaseAuthService implements AuthService {
 
   Future<AppUser?> _toAppUser(User? user) async {
     if (user == null) return null;
-    final doc = await _firestore.collection('users').doc(user.uid).get();
-    final data = doc.data();
-    final roleName = data?['role'] as String? ?? 'employee';
-    final role = Role.values.byName(roleName);
-    return AppUser(id: user.uid, email: user.email ?? '', role: role);
+    try {
+      final doc = await _firestore.collection('users').doc(user.uid).get();
+      final data = doc.data();
+      final roleName = data?['role'] as String? ?? 'employee';
+      final role = Role.values.byName(roleName);
+      return AppUser(id: user.uid, email: user.email ?? '', role: role);
+    } catch (_) {
+      return AppUser(id: user.uid, email: user.email ?? '', role: Role.employee);
+    }
   }
 }

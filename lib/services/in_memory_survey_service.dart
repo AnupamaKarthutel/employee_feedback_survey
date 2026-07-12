@@ -79,4 +79,10 @@ class InMemorySurveyService implements SurveyService {
   Stream<List<SurveyResponse>> getResponsesForSurvey(String surveyId) {
     return _responsesController(surveyId).stream;
   }
+
+  @override
+  Future<bool> hasSubmitted(String surveyId, String employeeId) async {
+    final responses = _responses[surveyId] ?? [];
+    return responses.any((r) => r.employeeId == employeeId);
+  }
 }

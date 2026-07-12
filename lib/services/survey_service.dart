@@ -15,4 +15,6 @@ abstract class SurveyService {
   Future<void> submitResponse(SurveyResponse response);
 
   Stream<List<SurveyResponse>> getResponsesForSurvey(String surveyId);
+
+  Future<bool> hasSubmitted(String surveyId, String employeeId);
 }

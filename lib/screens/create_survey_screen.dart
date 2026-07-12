@@ -120,19 +120,9 @@ class _CreateSurveyScreenState extends State<CreateSurveyScreen> {
                   (value == null || value.trim().isEmpty) ? 'Required' : null,
             ),
             const SizedBox(height: 24),
-            Row(
-              children: [
-                Text(
-                  'Questions',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const Spacer(),
-                TextButton.icon(
-                  onPressed: _addQuestion,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add Question'),
-                ),
-              ],
+            Text(
+              'Questions',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             ..._questions.asMap().entries.map((entry) {
@@ -143,7 +133,16 @@ class _CreateSurveyScreenState extends State<CreateSurveyScreen> {
                 onDelete: () => _removeQuestion(entry.key),
               );
             }),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: _addQuestion,
+              icon: const Icon(Icons.add),
+              label: const Text('Add Question'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+            const SizedBox(height: 12),
             ElevatedButton.icon(
               onPressed: _isSaving ? null : _saveSurvey,
               icon: _isSaving
